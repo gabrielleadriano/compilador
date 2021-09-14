@@ -35,6 +35,10 @@ import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingConstants;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
+import gals.LexicalError;
+import gals.Lexico;
+import gals.Token;
+
 public class Screen extends javax.swing.JFrame {
 
 	private static final long serialVersionUID = 1L;
@@ -83,22 +87,22 @@ public class Screen extends javax.swing.JFrame {
 
 		btnOpen.setBackground(new Color(220, 220, 220));
 		btnOpen.setForeground(Color.BLACK);
-		
+
 		btnSave.setBackground(new Color(220, 220, 220));
 		btnSave.setForeground(Color.BLACK);
-		
+
 		btnCopy.setBackground(new Color(220, 220, 220));
 		btnCopy.setForeground(Color.BLACK);
-		
+
 		btnPaste.setBackground(new Color(220, 220, 220));
 		btnPaste.setForeground(Color.BLACK);
-		
+
 		btnCut.setBackground(new Color(220, 220, 220));
 		btnCut.setForeground(Color.BLACK);
-		
+
 		btnRun.setBackground(new Color(220, 220, 220));
 		btnRun.setForeground(Color.BLACK);
-		
+
 		btnTeam.setBackground(new Color(220, 220, 220));
 		btnTeam.setForeground(Color.BLACK);
 	}
@@ -359,19 +363,17 @@ public class Screen extends javax.swing.JFrame {
 				String content = jtEditor.getText();
 				file = fc.getSelectedFile();
 				String path = file.getPath() + ".txt";
-				
 
 				try {
 					FileWriter fw = new FileWriter(path);
 					fw.write(content);
 					fw.flush();
 					fw.close();
-					
-					
+
 				} catch (Exception e2) {
 					System.out.println(e2);
 				}
-				
+
 				jtMessageArea.setText("");
 				lblPath.setText(path);
 			}
@@ -441,7 +443,17 @@ public class Screen extends javax.swing.JFrame {
 	}
 
 	private void btnRunAction() {
-		jtMessageArea.setText(btnAction.run());
+		Lexico lexico = new Lexico();
+		lexico.setInput(jtEditor.getText());
+		try {
+			Token t = null;
+			while ((t = lexico.nextToken()) != null) {
+				System.out.println(t.getLexeme());
+			}
+		} catch (LexicalError e) { // tratamento de erros
+			System.out.println(e.getMessage() + " em " + e.getPosition());
+
+		}
 	}
 
 	private void btnTeamAction() {

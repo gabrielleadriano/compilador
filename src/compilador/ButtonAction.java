@@ -1,5 +1,9 @@
 package compilador;
 
+import gals.LexicalError;
+import gals.Lexico;
+import gals.Token;
+
 public class ButtonAction {
 
 	private String copiedText = "";
@@ -13,10 +17,6 @@ public class ButtonAction {
 	
 	public String paste() {
 		return copiedText;
-	}
-		
-	public String run() {
-		return "Compilação de programas ainda não foi implementada";
 	}
 	
 	public String getTeam() { 
