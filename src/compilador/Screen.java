@@ -443,17 +443,36 @@ public class Screen extends javax.swing.JFrame {
 	}
 
 	private void btnRunAction() {
+		String texto = jtEditor.getText();
 		Lexico lexico = new Lexico();
-		lexico.setInput(jtEditor.getText());
+		lexico.setInput(texto);
+		String mensagem = "";
 		try {
 			Token t = null;
 			while ((t = lexico.nextToken()) != null) {
 				System.out.println(t.getLexeme());
 			}
 		} catch (LexicalError e) { // tratamento de erros
-			System.out.println(e.getMessage() + " em " + e.getPosition());
+			if(e.getMessage().equalsIgnoreCase("Comentário de bloco inválido ou não finalizado")) {
+				mensagem = "Erro na linha " + getLinha(texto,e.getErro()) + " - " + e.getMessage();
+				System.out.println("Erro na linha " + getLinha(texto,e.getErro()) + " - " + e.getMessage());
+			} else {
+				mensagem = "Erro na linha " + getLinha(texto,e.getErro()) + " - " + e.getErro() +" "+ e.getMessage();
+				System.out.println("Erro na linha " + getLinha(texto,e.getErro()) + " - " + e.getErro() +" "+ e.getMessage());
+			}
 
 		}
+		this.jtMessageArea.setText(mensagem);
+	}
+
+	private int getLinha(String texto, String token) {
+		String linhas[] = texto.split("\n");
+		for (int x=0; x<linhas.length; x++) {
+			if(linhas[x].contains(token)) {
+				return x+1;
+			}
+		}
+		return 0;
 	}
 
 	private void btnTeamAction() {
