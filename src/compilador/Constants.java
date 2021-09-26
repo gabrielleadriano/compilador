@@ -1,9 +1,9 @@
-package gals;
+package compilador;
 
 public interface Constants extends ScannerConstants {
 	int EPSILON = 0;
 	int DOLLAR = 1;
-
+	
 	int t_palavra_reservada = 2;
 	int t_int = 3;
 	int t_float = 4;
@@ -46,5 +46,4 @@ public interface Constants extends ScannerConstants {
 	int t_TOKEN_41 = 41; // ";"
 	int t_TOKEN_42 = 42; // ":"
 	int t_TOKEN_43 = 43; // "="
-
 }

@@ -1,4 +1,4 @@
-package gals;
+package compilador;
 
 public interface ScannerConstants {
 	
