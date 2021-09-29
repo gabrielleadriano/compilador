@@ -452,14 +452,15 @@ public class Screen extends javax.swing.JFrame {
 			mensagem = "linha	classe		lexema\n";
 			while ((t = lexico.nextToken()) != null) {
 				String lexeme = t.getLexeme();
-				mensagem += getLinha(texto, lexeme) + "	"+ getLexemeClass(t.getId()) + "		" + lexeme + "\n";
+				mensagem += getLinha(texto, lexeme) + "	" + getLexemeClass(t.getId()) + "	" + lexeme + "\n";
 			}
 			mensagem += "\nprograma compilado com sucesso";
 		} catch (LexicalError e) { // tratamento de erros
-			mensagem = "";
-			if (e.getMessage().equalsIgnoreCase("Comentário de bloco inválido ou não finalizado")) {
-				mensagem = "Erro na linha " + getLinha(texto, e.getErro()) + " - " + e.getMessage();
-				System.out.println("Erro na linha " + getLinha(texto, e.getErro()) + " - " + e.getMessage());
+			String[] erro = e.getErro().split("\n");
+			if (e.getMessage().equalsIgnoreCase("Comentário de bloco inválido ou não finalizado")
+					|| e.getMessage().equalsIgnoreCase("Constante string inválida ou não finalizada")) {
+				mensagem = "Erro na linha " + getLinha(texto, erro[0]) + " - " + e.getMessage();
+				System.out.println("Erro na linha " + getLinha(texto, erro[0]) + " - " + e.getMessage());
 			} else {
 				mensagem = "Erro na linha " + getLinha(texto, e.getErro()) + " - " + e.getErro() + " " + e.getMessage();
 				System.out.println(
@@ -480,6 +481,7 @@ public class Screen extends javax.swing.JFrame {
 		return 0;
 	}
 
+
 	private void btnTeamAction() {
 		jtMessageArea.setText(btnAction.getTeam());
 	}
@@ -487,18 +489,18 @@ public class Screen extends javax.swing.JFrame {
 	private String getLexemeClass(int id) {
 		String lexemeClass = "";
 
-		if (id == 2 || (id >= Constants.t_and && id <= 27)) {
-			lexemeClass = "palavra reservada";
+		if (id == 2 || (id >= Constants.t_and && id <= Constants.t_while)) {
+			lexemeClass = "palavra reservada ";
 		} else if (id == Constants.t_constInt) {
-			lexemeClass = "constante int";
+			lexemeClass = "constante int	";
 		} else if (id == Constants.t_constFloat) {
-			lexemeClass = "constante float";
+			lexemeClass = "constante float	";
 		} else if (id == Constants.t_constString) {
-			lexemeClass = "constante string";
+			lexemeClass = "constante string ";
 		} else if (id >= Constants.t_int && id <= Constants.t_bool) {
-			lexemeClass = "identificador";
+			lexemeClass = "identificador	";
 		} else if (id >= Constants.t_TOKEN_28 && id <= Constants.t_TOKEN_43) {
-			lexemeClass = "símbolo especial";
+			lexemeClass = "símbolo especial ";
 		}
 
 		return lexemeClass;

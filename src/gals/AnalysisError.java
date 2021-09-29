@@ -1,8 +1,6 @@
 package gals;
 
 public class AnalysisError extends Exception {
-
-	private static final long serialVersionUID = 1L;
 	private int position;
 	private String erro;
 
