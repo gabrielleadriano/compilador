@@ -442,37 +442,42 @@ public class Screen extends javax.swing.JFrame {
 		jtEditor.replaceSelection("");
 	}
 
-	private void btnRunAction() {
+	private void btnRunAction(){
 		String texto = jtEditor.getText();
 		Lexico lexico = new Lexico();
 		lexico.setInput(texto);
 		String mensagem = "";
+		String linhas[] = texto.split("\n");
 		try {
+			for(int x = 0; x < linhas.length; x++) {
+				if(linhas[x].contains("char")) {
+					throw new LexicalError("palavra reservada inválida", "char");
+				}
+			}
 			Token t = null;
 			mensagem = "linha	classe		lexema\n";
 			while ((t = lexico.nextToken()) != null) {
 				String lexeme = t.getLexeme();
-				mensagem += getLinha(texto, lexeme) + "	" + getLexemeClass(t.getId()) + "	" + lexeme + "\n";
+				mensagem += getLinha(linhas, lexeme) + "	" + getLexemeClass(t.getId()) + "	" + lexeme + "\n";
 			}
 			mensagem += "\nprograma compilado com sucesso";
 		} catch (LexicalError e) { // tratamento de erros
 			String[] erro = e.getErro().split("\n");
 			if (e.getMessage().equalsIgnoreCase("Comentário de bloco inválido ou não finalizado")
 					|| e.getMessage().equalsIgnoreCase("Constante string inválida ou não finalizada")) {
-				mensagem = "Erro na linha " + getLinha(texto, erro[0]) + " - " + e.getMessage();
-				System.out.println("Erro na linha " + getLinha(texto, erro[0]) + " - " + e.getMessage());
+				mensagem = "Erro na linha " + getLinha(linhas, erro[0]) + " - " + e.getMessage();
+				System.out.println("Erro na linha " + getLinha(linhas, erro[0]) + " - " + e.getMessage());
 			} else {
-				mensagem = "Erro na linha " + getLinha(texto, e.getErro()) + " - " + e.getErro() + " " + e.getMessage();
+				mensagem = "Erro na linha " + getLinha(linhas, e.getErro()) + " - " + e.getErro() + " " + e.getMessage();
 				System.out.println(
-						"Erro na linha " + getLinha(texto, e.getErro()) + " - " + e.getErro() + " " + e.getMessage());
+						"Erro na linha " + getLinha(linhas, e.getErro()) + " - " + e.getErro() + " " + e.getMessage());
 			}
 
 		}
 		this.jtMessageArea.setText(mensagem);
 	}
 
-	private int getLinha(String texto, String token) {
-		String linhas[] = texto.split("\n");
+	private int getLinha(String[] linhas, String token) {
 		for (int x = 0; x < linhas.length; x++) {
 			if (linhas[x].contains(token)) {
 				return x + 1;
