@@ -449,11 +449,7 @@ public class Screen extends javax.swing.JFrame {
 		String mensagem = "";
 		String linhas[] = texto.split("\n");
 		try {
-			for(int x = 0; x < linhas.length; x++) {
-				if(linhas[x].contains("char")) {
-					throw new LexicalError("palavra reservada inválida", "char");
-				}
-			}
+			validaChar(linhas);
 			Token t = null;
 			mensagem = "linha	classe		lexema\n";
 			while ((t = lexico.nextToken()) != null) {
@@ -475,6 +471,14 @@ public class Screen extends javax.swing.JFrame {
 
 		}
 		this.jtMessageArea.setText(mensagem);
+	}
+
+	private void validaChar(String[] linhas) throws LexicalError {
+		for(int x = 0; x < linhas.length; x++) {
+			if(linhas[x].contains("char")) {
+				throw new LexicalError("palavra reservada inválida", "char");
+			}
+		}
 	}
 
 	private int getLinha(String[] linhas, String token) {
