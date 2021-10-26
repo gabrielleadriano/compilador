@@ -1,6 +1,8 @@
 package compilador;
 
-public interface Constants extends ScannerConstants
+import gals.ParserConstants;
+
+public interface Constants extends ScannerConstants, ParserConstants
 {
     int EPSILON  = 0;
     int DOLLAR   = 1;

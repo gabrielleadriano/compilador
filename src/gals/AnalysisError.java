@@ -1,6 +1,7 @@
 package gals;
 
-public class AnalysisError extends Exception {
+public class AnalysisError extends Exception
+{
 	private int position;
 	private String erro;
 

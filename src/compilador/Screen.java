@@ -37,6 +37,10 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 
 import gals.LexicalError;
 import gals.Lexico;
+import gals.SemanticError;
+import gals.Semantico;
+import gals.Sintatico;
+import gals.SyntaticError;
 import gals.Token;
 
 public class Screen extends javax.swing.JFrame {
@@ -442,40 +446,55 @@ public class Screen extends javax.swing.JFrame {
 		jtEditor.replaceSelection("");
 	}
 
-	private void btnRunAction(){
+	private void btnRunAction() {
 		String texto = jtEditor.getText();
 		Lexico lexico = new Lexico();
+		Sintatico sintatico = new Sintatico();
+		Semantico semantico = new Semantico();
+
 		lexico.setInput(texto);
 		String mensagem = "";
 		String linhas[] = texto.split("\n");
 		try {
-			validaChar(linhas);
-			Token t = null;
-			mensagem = "linha	classe		lexema\n";
-			while ((t = lexico.nextToken()) != null) {
-				String lexeme = t.getLexeme();
-				mensagem += getLinha(linhas, lexeme) + "	" + getLexemeClass(t.getId()) + "	" + lexeme + "\n";
-			}
-			mensagem += "\nprograma compilado com sucesso";
-		} catch (LexicalError e) { // tratamento de erros
-			String[] erro = e.getErro().split("\n");
-			if (e.getMessage().equalsIgnoreCase("Comentário de bloco inválido ou não finalizado")
-					|| e.getMessage().equalsIgnoreCase("Constante string inválida ou não finalizada")) {
-				mensagem = "Erro na linha " + getLinha(linhas, erro[0]) + " - " + e.getMessage();
-				System.out.println("Erro na linha " + getLinha(linhas, erro[0]) + " - " + e.getMessage());
-			} else {
-				mensagem = "Erro na linha " + getLinha(linhas, e.getErro()) + " - " + e.getErro() + " " + e.getMessage();
-				System.out.println(
-						"Erro na linha " + getLinha(linhas, e.getErro()) + " - " + e.getErro() + " " + e.getMessage());
-			}
-
+//			validaChar(linhas);
+//			Token t = null;
+//			mensagem = "linha	classe		lexema\n";
+//			while ((t = lexico.nextToken()) != null) {
+//				String lexeme = t.getLexeme();
+//				mensagem += getLinha(linhas, lexeme) + "	" + getLexemeClass(t.getId()) + "	" + lexeme + "\n";
+//			}
+//			mensagem += "\nprograma compilado com sucesso";
+			sintatico.parse(lexico, semantico); 
+		} catch (LexicalError e) {
+			// Trata erros léxicos
+//			String[] erro = e.getErro().split("\n");
+//			if (e.getMessage().equalsIgnoreCase("Comentário de bloco inválido ou não finalizado")
+//					|| e.getMessage().equalsIgnoreCase("Constante string inválida ou não finalizada")) {
+//				mensagem = "Erro na linha " + getLinha(linhas, erro[0]) + " - " + e.getMessage();
+//				System.out.println("Erro na linha " + getLinha(linhas, erro[0]) + " - " + e.getMessage());
+//			} else {
+//				mensagem = "Erro na linha " + getLinha(linhas, e.getErro()) + " - " + e.getErro() + " "
+//						+ e.getMessage();
+//				System.out.println(
+//						"Erro na linha " + getLinha(linhas, e.getErro()) + " - " + e.getErro() + " " + e.getMessage());
+//			}
+		} catch (SyntaticError e) {
+			System.out.println(e.getPosition() + " símbolo encontrado: na entrada " + e.getMessage());
+			// Trata erros sintáticos
+			// linha
+			// símbolo encontrado
+			// mensagem - símbolos esperados, alterar ParserConstants.java, String[]
+			// PARSER_ERROR
+		} catch (SemanticError e) {
+			// Trata erros semânticos
 		}
+
 		this.jtMessageArea.setText(mensagem);
 	}
 
 	private void validaChar(String[] linhas) throws LexicalError {
-		for(int x = 0; x < linhas.length; x++) {
-			if(linhas[x].contains("char")) {
+		for (int x = 0; x < linhas.length; x++) {
+			if (linhas[x].contains("char")) {
 				throw new LexicalError("palavra reservada inválida", "char");
 			}
 		}
@@ -489,7 +508,6 @@ public class Screen extends javax.swing.JFrame {
 		}
 		return 0;
 	}
-
 
 	private void btnTeamAction() {
 		jtMessageArea.setText(btnAction.getTeam());
