@@ -1,7 +1,6 @@
 package gals;
 
-public class AnalysisError extends Exception
-{
+public class AnalysisError extends Exception {
 	private int position;
 	private String erro;
 
@@ -17,6 +16,12 @@ public class AnalysisError extends Exception
 
 	public AnalysisError(String msg, String erro) {
 		super(msg);
+		this.setErro(erro);
+	}
+
+	public AnalysisError(String msg, String erro, int position) {
+		super(msg);
+		this.position = position;
 		this.setErro(erro);
 	}
 
