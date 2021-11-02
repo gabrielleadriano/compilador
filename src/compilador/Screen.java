@@ -37,6 +37,10 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 
 import gals.LexicalError;
 import gals.Lexico;
+import gals.SemanticError;
+import gals.Semantico;
+import gals.Sintatico;
+import gals.SyntaticError;
 import gals.Token;
 
 public class Screen extends javax.swing.JFrame {
@@ -442,78 +446,133 @@ public class Screen extends javax.swing.JFrame {
 		jtEditor.replaceSelection("");
 	}
 
-	private void btnRunAction(){
+	private void btnRunAction() {
+
 		String texto = jtEditor.getText();
 		Lexico lexico = new Lexico();
+		Sintatico sintatico = new Sintatico();
+		Semantico semantico = new Semantico();
+
 		lexico.setInput(texto);
 		String mensagem = "";
 		String linhas[] = texto.split("\n");
 		try {
-			validaChar(linhas);
-			Token t = null;
-			mensagem = "linha	classe		lexema\n";
-			while ((t = lexico.nextToken()) != null) {
-				String lexeme = t.getLexeme();
-				mensagem += getLinha(linhas, lexeme) + "	" + getLexemeClass(t.getId()) + "	" + lexeme + "\n";
-			}
-			mensagem += "\nprograma compilado com sucesso";
-		} catch (LexicalError e) { // tratamento de erros
-			String[] erro = e.getErro().split("\n");
-			if (e.getMessage().equalsIgnoreCase("Comentário de bloco inválido ou não finalizado")
-					|| e.getMessage().equalsIgnoreCase("Constante string inválida ou não finalizada")) {
-				mensagem = "Erro na linha " + getLinha(linhas, erro[0]) + " - " + e.getMessage();
-				System.out.println("Erro na linha " + getLinha(linhas, erro[0]) + " - " + e.getMessage());
-			} else {
-				mensagem = "Erro na linha " + getLinha(linhas, e.getErro()) + " - " + e.getErro() + " " + e.getMessage();
-				System.out.println(
-						"Erro na linha " + getLinha(linhas, e.getErro()) + " - " + e.getErro() + " " + e.getMessage());
-			}
+			validaPalavrasReservadas(linhas);
+			sintatico.parse(lexico, semantico);
+			mensagem = "programa compilado com sucesso";
+		} catch (SyntaticError e) { // Trata erros sintáticos
+			mensagem = "Erro na linha " + getLinha(linhas, e.getErro(), e.getPosition()) + " - encontrado "
+					+ e.getErro() + e.getMessage();
+			System.out.println(getLinha(linhas, e.getErro(), e.getPosition()) + " símbolo encontrado: na entrada "
+					+ e.getMessage());
 
+		} catch (LexicalError e) { // Trata erros léxicos
+
+			String[] erro = e.getErro().split("\n");
+			if (e.getMessage().equalsIgnoreCase("Comentário de bloco inválido ou não finalizado")) {
+				mensagem = "Erro na linha " + getLinhaComentario(linhas) + " - " + e.getMessage();
+				System.out.println("Erro na linha " + getLinhaComentario(linhas) + " - " + e.getMessage());
+			} else if (e.getMessage().equalsIgnoreCase("Constante string inválida ou não finalizada")) {
+				mensagem = "Erro na linha " + getLinhaString(linhas, erro[0]) + " - " + e.getMessage();
+				System.out.println("Erro na linha " + getLinhaString(linhas, erro[0]) + " - " + e.getMessage());
+			} else {
+				mensagem = "Erro na linha " + getLinha(linhas, e.getErro(), e.getPosition()) + " - " + e.getErro() + " "
+						+ e.getMessage();
+				System.out.println("Erro na linha " + getLinha(linhas, e.getErro(), e.getPosition()) + " - "
+						+ e.getErro() + " " + e.getMessage());
+			}
+		} catch (SemanticError e) {// Trata erros semânticos
 		}
+
 		this.jtMessageArea.setText(mensagem);
 	}
 
-	private void validaChar(String[] linhas) throws LexicalError {
-		for(int x = 0; x < linhas.length; x++) {
-			if(linhas[x].contains("char")) {
-				throw new LexicalError("palavra reservada inválida", "char");
+	private void validaPalavrasReservadas(String[] linhas) throws LexicalError {
+
+		for (int x = 0; x < linhas.length; x++) {
+
+			String palavra = linhas[x];
+			if (palavra.equals("char") || palavra.equals("aNd") || palavra.equals("endwhile") || palavra.equals("bool")
+					|| palavra.equals("iffalse")) {
+				throw new LexicalError("palavra reservada inválida", palavra);
 			}
 		}
 	}
 
-	private int getLinha(String[] linhas, String token) {
+	private int getLinhaComentario(String[] linhas) {
+
+		int linhaIncio = 0;
+		int linhaFim = 0;
 		for (int x = 0; x < linhas.length; x++) {
-			if (linhas[x].contains(token)) {
+			if (linhas[x].indexOf("{") != -1) {
+				linhaIncio = x + 1;
+			}
+			if (linhas[x].indexOf("}") != -1) {
+				linhaFim = x + 1;
+			}
+		}
+		if (linhaIncio > linhaFim) {
+			return linhaIncio;
+		}
+		return 0;
+	}
+
+	private int getLinhaString(String[] linhas, String token) {
+		for (int x = 0; x < linhas.length; x++) {
+			if (linhas[x].indexOf(token) != -1 && linhas[x].indexOf(token) == linhas[x].lastIndexOf(token)) {
 				return x + 1;
 			}
 		}
 		return 0;
 	}
 
+//	private int getLinha(String[] linhas, String token) {
+//		for (int x = 0; x < linhas.length; x++) {
+//			if (linhas[x].contains(token)) {
+//				return x + 1;
+//			}
+//		}
+//		return 0;
+//	}
+
+	private int getLinha(String[] linhas, String token, int position) {
+		int positionCount = 0;
+		for (int x = 0; x < linhas.length; x++) {
+			String linhaAtual = linhas[x];
+
+			for (int y = 0; y < linhaAtual.length(); y++) {
+				positionCount++;
+				if (positionCount == position) {
+					return x + 1;
+				}
+			}
+		}
+		return 0;
+	}
 
 	private void btnTeamAction() {
 		jtMessageArea.setText(btnAction.getTeam());
 	}
 
-	private String getLexemeClass(int id) {
-		String lexemeClass = "";
-
-		if (id == 2 || (id >= Constants.t_and && id <= Constants.t_while)) {
-			lexemeClass = "palavra reservada ";
-		} else if (id == Constants.t_constInt) {
-			lexemeClass = "constante int	";
-		} else if (id == Constants.t_constFloat) {
-			lexemeClass = "constante float	";
-		} else if (id == Constants.t_constString) {
-			lexemeClass = "constante string ";
-		} else if (id >= Constants.t_int && id <= Constants.t_bool) {
-			lexemeClass = "identificador	";
-		} else if (id >= Constants.t_TOKEN_28 && id <= Constants.t_TOKEN_43) {
-			lexemeClass = "símbolo especial ";
-		}
-
-		return lexemeClass;
-	}
+//	private String getLexemeClass(int id) {
+//		String lexemeClass = "";
+//
+//		if (id == 2 || (id >= Constants.t_and && id <= Constants.t_while)) {
+//			lexemeClass = "palavra reservada ";
+//		} else if (id == Constants.t_constInt) {
+//			lexemeClass = "constante int	";
+//		} else if (id == Constants.t_constFloat) {
+//			lexemeClass = "constante float	";
+//		} else if (id == Constants.t_constString) {
+//			lexemeClass = "constante string ";
+//		} else if (id >= Constants.t_int && id <= Constants.t_bool) {
+//			lexemeClass = "identificador	";
+//		} else if (id >= Constants.t_TOKEN_28 && id <= Constants.t_TOKEN_43) {
+//			lexemeClass = "símbolo especial ";
+//		}
+//
+//		return lexemeClass;
+//	}
 
 	public static void main(String args[]) {
 		/* Create and display the form */

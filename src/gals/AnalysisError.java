@@ -19,6 +19,12 @@ public class AnalysisError extends Exception {
 		this.setErro(erro);
 	}
 
+	public AnalysisError(String msg, String erro, int position) {
+		super(msg);
+		this.position = position;
+		this.setErro(erro);
+	}
+
 	public int getPosition() {
 		return position;
 	}

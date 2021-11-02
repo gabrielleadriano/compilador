@@ -2038,13 +2038,10 @@ public interface ScannerConstants
 
     String[] SCANNER_ERROR =
     {
-        "Símbolo inválido",
+        "Caractere não esperado",
         "",
         "",
-        "Constante string inválida ou não finalizada",
-        "",
-        "",
-        "",
+        "Erro identificando constString",
         "",
         "",
         "",
@@ -2055,14 +2052,17 @@ public interface ScannerConstants
         "",
         "",
         "",
-        "Identificador inválido",
-        "Identificador inválido",
-        "Identificador inválido",
-        "Identificador inválido",
         "",
         "",
         "",
-        "Comentário de bloco inválido ou não finalizado",
+        "Erro identificando bool",
+        "Erro identificando float",
+        "Erro identificando int",
+        "Erro identificando string",
+        "",
+        "",
+        "",
+        "Erro identificando <ignorar>",
         "",
         "Erro identificando constFloat",
         "",
@@ -2091,4 +2091,5 @@ public interface ScannerConstants
         "",
         ""
     };
+
 }

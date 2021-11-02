@@ -75,9 +75,3 @@ class NumberedBorder extends AbstractBorder {
 		return characterHeight * lenght;
 	}
 }
-
-
-/* como usar com um JTextArea:
-JTextArea  = new JTextArea();
-txt.setBorder(new NumberedBorder());
-*/
