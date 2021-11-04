@@ -462,24 +462,18 @@ public class Screen extends javax.swing.JFrame {
 			mensagem = "programa compilado com sucesso";
 		} catch (SyntaticError e) { // Trata erros sintáticos
 			mensagem = "Erro na linha " + getLinha(linhas, e.getErro(), e.getPosition()) + " - encontrado "
-					+ e.getErro() + e.getMessage();
-			System.out.println(getLinha(linhas, e.getErro(), e.getPosition()) + " símbolo encontrado: na entrada "
-					+ e.getMessage());
+					+ e.getErro() + " " + e.getMessage();
 
 		} catch (LexicalError e) { // Trata erros léxicos
 
 			String[] erro = e.getErro().split("\n");
 			if (e.getMessage().equalsIgnoreCase("Comentário de bloco inválido ou não finalizado")) {
 				mensagem = "Erro na linha " + getLinhaComentario(linhas) + " - " + e.getMessage();
-				System.out.println("Erro na linha " + getLinhaComentario(linhas) + " - " + e.getMessage());
 			} else if (e.getMessage().equalsIgnoreCase("Constante string inválida ou não finalizada")) {
 				mensagem = "Erro na linha " + getLinhaString(linhas, erro[0]) + " - " + e.getMessage();
-				System.out.println("Erro na linha " + getLinhaString(linhas, erro[0]) + " - " + e.getMessage());
 			} else {
-				mensagem = "Erro na linha " + getLinha(linhas, e.getErro(), e.getPosition()) + " - " + e.getErro() + " "
+				mensagem = "Erro na linha " + getLinha(linhas, e.getErro(), e.getPosition()) + " - " + " "
 						+ e.getMessage();
-				System.out.println("Erro na linha " + getLinha(linhas, e.getErro(), e.getPosition()) + " - "
-						+ e.getErro() + " " + e.getMessage());
 			}
 		} catch (SemanticError e) {// Trata erros semânticos
 		}
@@ -488,7 +482,6 @@ public class Screen extends javax.swing.JFrame {
 	}
 
 	private void validaPalavrasReservadas(String[] linhas) throws LexicalError {
-
 		for (int x = 0; x < linhas.length; x++) {
 
 			String palavra = linhas[x];
@@ -526,6 +519,7 @@ public class Screen extends javax.swing.JFrame {
 		return 0;
 	}
 
+//getLinha() antigo
 //	private int getLinha(String[] linhas, String token) {
 //		for (int x = 0; x < linhas.length; x++) {
 //			if (linhas[x].contains(token)) {
@@ -536,9 +530,21 @@ public class Screen extends javax.swing.JFrame {
 //	}
 
 	private int getLinha(String[] linhas, String token, int position) {
+		
+// verifica se texto e linhas tem a mesma quantidade de caracteres
+//		String texto = jtEditor.getText();
+//		String teste = texto.substring(position);
+//		int tamanhoTexto = texto.length();
+//		int tamanhoLinhas = 0;
+//		for (int x = 0; x < linhas.length; x++) {
+//			String linhaAtual = linhas[x] + " ";
+//			for (int y = 0; y < linhaAtual.length(); y++) {
+//				tamanhoLinhas++;
+//			}
+//		}
 		int positionCount = 0;
 		for (int x = 0; x < linhas.length; x++) {
-			String linhaAtual = linhas[x];
+			String linhaAtual = linhas[x] + " ";
 
 			for (int y = 0; y < linhaAtual.length(); y++) {
 				positionCount++;
