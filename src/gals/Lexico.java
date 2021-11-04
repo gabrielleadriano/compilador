@@ -48,8 +48,17 @@ public class Lexico implements Constants {
 				}
 			}
 		}
-		if (endState < 0 || (endState != state && tokenForState(lastState) == -2))
-			throw new LexicalError(SCANNER_ERROR[lastState], input.subSequence(start, position).toString(), position);
+		
+        if (endState < 0 || (endState != state && tokenForState(lastState) == -2)) {
+        	String mensagemErro = input.subSequence(start, position).toString();
+        	String[] erro = input.split("\n");
+        	for(int x = 0; x < erro.length; x++) {
+        		if((erro[x].contains("I_") || erro[x].contains("S_") || erro[x].contains("B_") || erro[x].contains("F_"))&& erro[x].contains(mensagemErro)) {
+        			mensagemErro = erro[x];
+        		}
+        	}
+        	throw new LexicalError(SCANNER_ERROR[lastState], mensagemErro, position);
+        }
 
 		position = end;
 
