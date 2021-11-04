@@ -467,14 +467,16 @@ public class Screen extends javax.swing.JFrame {
 		} catch (LexicalError e) { // Trata erros léxicos
 
 			String[] erro = e.getErro().split("\n");
-			if (e.getMessage().equalsIgnoreCase("Comentário de bloco inválido ou não finalizado")) {
-				mensagem = "Erro na linha " + getLinhaComentario(linhas) + " - " + e.getMessage();
-			} else if (e.getMessage().equalsIgnoreCase("Constante string inválida ou não finalizada")) {
-				mensagem = "Erro na linha " + getLinhaString(linhas, erro[0]) + " - " + e.getMessage();
+			if (e.getMessage().equalsIgnoreCase("Comentário de bloco inválido ou não finalizado")
+					|| e.getMessage().equalsIgnoreCase("Constante string inválida ou não finalizada")) {
+				mensagem = "Erro na linha " + getLinha(linhas, erro[0], e.getPosition()) + " - " + e.getMessage();
+				System.out.println("Erro na linha " + getLinha(linhas, erro[0], e.getPosition()) + " - " + e.getMessage());
 			} else {
-				mensagem = "Erro na linha " + getLinha(linhas, e.getErro(), e.getPosition()) + " - " + " "
-						+ e.getMessage();
+				mensagem = "Erro na linha " + getLinha(linhas, e.getErro(), e.getPosition()) + " - " + e.getErro() + " " + e.getMessage();
+				System.out.println(
+						"Erro na linha " + getLinha(linhas, e.getErro(), e.getPosition()) + " - " + e.getErro() + " " + e.getMessage());
 			}
+
 		} catch (SemanticError e) {// Trata erros semânticos
 		}
 
@@ -482,41 +484,18 @@ public class Screen extends javax.swing.JFrame {
 	}
 
 	private void validaPalavrasReservadas(String[] linhas) throws LexicalError {
+		int positionCount = 0;
 		for (int x = 0; x < linhas.length; x++) {
 
 			String palavra = linhas[x];
+			for (int y = 0; y < palavra.length(); y++) {
+				positionCount++;
+			}
 			if (palavra.equals("char") || palavra.equals("aNd") || palavra.equals("endwhile") || palavra.equals("bool")
 					|| palavra.equals("iffalse")) {
-				throw new LexicalError("palavra reservada inválida", palavra);
+				throw new LexicalError("palavra reservada inválida", palavra, positionCount + linhas.length);
 			}
 		}
-	}
-
-	private int getLinhaComentario(String[] linhas) {
-
-		int linhaIncio = 0;
-		int linhaFim = 0;
-		for (int x = 0; x < linhas.length; x++) {
-			if (linhas[x].indexOf("{") != -1) {
-				linhaIncio = x + 1;
-			}
-			if (linhas[x].indexOf("}") != -1) {
-				linhaFim = x + 1;
-			}
-		}
-		if (linhaIncio > linhaFim) {
-			return linhaIncio;
-		}
-		return 0;
-	}
-
-	private int getLinhaString(String[] linhas, String token) {
-		for (int x = 0; x < linhas.length; x++) {
-			if (linhas[x].indexOf(token) != -1 && linhas[x].indexOf(token) == linhas[x].lastIndexOf(token)) {
-				return x + 1;
-			}
-		}
-		return 0;
 	}
 
 //getLinha() antigo
