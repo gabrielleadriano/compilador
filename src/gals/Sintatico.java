@@ -2,8 +2,6 @@ package gals;
 
 import java.util.Stack;
 
-import compilador.Constants;
-
 public class Sintatico implements Constants {
 	private Stack stack = new Stack();
 	private Token currentToken;

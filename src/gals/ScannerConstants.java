@@ -1,4 +1,4 @@
-package compilador;
+package gals;
 
 public interface ScannerConstants
 {
@@ -2025,26 +2025,23 @@ public interface ScannerConstants
         {122, 51}
     };
 
-    int[] TOKEN_STATE = {-2,  0,  0, -1, 30, 31, 38, 36, 40, 37, 39,  7, 42, 41, 34, 43, 35, -1, -1, -1, -1, 28, 29,  2, -2,  9, -1, 33, 32, -1, -1, -1, -1, -1,  0,  8,  6,  4,  3,  5, -1, -1, -1, -1,  6,  6,  4,  4,  3,  3,  5,  5 };
+    int[] TOKEN_STATE = {-2,  0,  0, -1, 31, 32, 39, 37, 41, 38, 40,  7, 43, 42, 35, 44, 36, -1, -1, -1, -1, 29, 30,  2, -2,  9, -1, 34, 33, -1, -1, -1, -1, -1,  0,  8,  6,  4,  3,  5, -1, -1, -1, -1,  6,  6,  4,  4,  3,  3,  5,  5 };
 
     int[] SPECIAL_CASES_INDEXES =
-        { 0, 0, 0, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18 };
+        { 0, 0, 0, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19 };
 
     String[] SPECIAL_CASES_KEYS =
-        {  "and", "endIf", "endWhile", "false", "finish", "if", "in", "isFalseDo", "isTrueDo", "newLine", "not", "or", "out", "space", "start", "tab", "true", "while" };
+        {  "and", "array", "endIf", "endWhile", "false", "finish", "if", "in", "isFalseDo", "isTrueDo", "newLine", "not", "or", "out", "space", "start", "tab", "true", "while" };
 
     int[] SPECIAL_CASES_VALUES =
-        {  10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27 };
+        {  10, 28, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27 };
 
     String[] SCANNER_ERROR =
     {
-        "símbolo inválido",
+        "Caractere não esperado",
         "",
         "",
-        "constante string inválida ou não finalizada",
-        "",
-        "",
-        "",
+        "Erro identificando constString",
         "",
         "",
         "",
@@ -2055,33 +2052,36 @@ public interface ScannerConstants
         "",
         "",
         "",
-        "identificador inválido",
-        "identificador inválido",
-        "identificador inválido",
-        "identificador inválido",
         "",
         "",
         "",
-        "comentário de bloco inválido ou não finalizado",
-        "",
-        "identificador inválido",
-        "",
-        "",
-        "identificador inválido",
-        "identificador inválido",
-        "identificador inválido",
-        "identificador inválido",
-        "palavra reservada inválida",
+        "Erro identificando bool",
+        "Erro identificando float",
+        "Erro identificando int",
+        "Erro identificando string",
         "",
         "",
         "",
+        "Erro identificando <ignorar>",
+        "",
+        "Erro identificando constFloat",
+        "",
+        "",
+        "Erro identificando bool",
+        "Erro identificando float",
+        "Erro identificando int",
+        "Erro identificando string",
+        "Erro identificando palavra_reservada",
         "",
         "",
         "",
-        "identificador inválido",
-        "identificador inválido",
-        "identificador inválido",
-        "identificador inválido",
+        "",
+        "",
+        "",
+        "Erro identificando bool",
+        "Erro identificando float",
+        "Erro identificando int",
+        "Erro identificando string",
         "",
         "",
         "",
@@ -2091,4 +2091,5 @@ public interface ScannerConstants
         "",
         ""
     };
+
 }

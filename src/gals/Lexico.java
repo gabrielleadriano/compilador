@@ -1,7 +1,5 @@
 package gals;
 
-import compilador.Constants;
-
 public class Lexico implements Constants {
 	private int position;
 	private String input;

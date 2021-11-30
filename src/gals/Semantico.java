@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
 
-import compilador.Constants;
+import compilador.TipoEnum;
 
 public class Semantico implements Constants {
 	
@@ -22,6 +22,12 @@ public class Semantico implements Constants {
 		case 6:
 			acao6(token);
 			break;
+		case 11:
+			acao11();
+			break;
+		case 12:
+			acao12();
+			break;
 		case 14:
 			acao14();
 			break;
@@ -36,7 +42,7 @@ public class Semantico implements Constants {
 			break;
 		}
     }
-    
+
 	private void acao5(Token token) {
 		pilhaTipos.push(TipoEnum.int64);
 		codigo.add("ldc.i8" + token.getLexeme());
@@ -46,7 +52,16 @@ public class Semantico implements Constants {
 	private void acao6(Token token) {
 		pilhaTipos.push(TipoEnum.float64);
 		codigo.add("ldc.r8" + token.getLexeme());
-		
+	}
+	
+	private void acao11() {
+		pilhaTipos.push(TipoEnum.bool);
+		codigo.add("ldc.i4.1");
+	}
+
+	private void acao12() {
+		pilhaTipos.push(TipoEnum.bool);
+		codigo.add("ldc.i4.0");
 	}
 	
 	private void acao14() {
@@ -58,11 +73,17 @@ public class Semantico implements Constants {
 	}
 	
 	private void acao15() {
-		codigo.add("ret } }");
+		codigo.add(".assembly extern mscorlib {}\r\n"
+				+ ".assembly _codigo_objeto{}\r\n"
+				+ ".module _codigo_objeto.exe\r\n"
+				+ "\r\n"
+				+ ".class public _UNICA{\r\n"
+				+ ".method static public void _principal() {\r\n"
+				+ "	.entrypoint");
 	}
 
 	private void acao16() {
-		codigo.add("ret } }");
+		codigo.add("	ret\r\n	}\r\n }");
 	}
 	
 }
