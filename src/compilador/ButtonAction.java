@@ -1,9 +1,5 @@
 package compilador;
 
-import gals.LexicalError;
-import gals.Lexico;
-import gals.Token;
-
 public class ButtonAction {
 
 	private String copiedText = "";

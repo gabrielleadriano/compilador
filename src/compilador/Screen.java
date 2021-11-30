@@ -41,7 +41,6 @@ import gals.SemanticError;
 import gals.Semantico;
 import gals.Sintatico;
 import gals.SyntaticError;
-import gals.Token;
 
 public class Screen extends javax.swing.JFrame {
 
