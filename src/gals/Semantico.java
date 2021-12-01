@@ -8,7 +8,7 @@ import compilador.TipoEnum;
 
 public class Semantico implements Constants {
 	
-	private List<String> operadores = new ArrayList<>();
+	private List<String> listaIdentificadores = new ArrayList<>();
 	private List<String> codigo = new ArrayList<>();
 	private Stack<TipoEnum> pilhaTipos = new Stack<>();
 	
@@ -17,10 +17,10 @@ public class Semantico implements Constants {
         
         switch (action) {
 		case 1:
-			acao1();
+			acao1(token);
 			break;
 		case 2:
-			acao2();
+			acao2(token);
 			break;
 		case 3:
 			acao3(token);
@@ -73,48 +73,66 @@ public class Semantico implements Constants {
 		case 20:
 			acao20();
 			break;
+		case 21:
+			acao21(token);
+			break;
+		case 22:
+			acao22(token);
+			break;
 
 		default:
 			break;
 		}
         
         System.out.println(codigo.toString());
-        System.out.println("ldstr \"\\n\"");
-        System.out.println("ldstr \" \"");
-        System.out.println("ldstr \"\\t\"");
     }
     
-	private void acao1() {
+	private void acao1(Token token) throws SemanticError {
 		TipoEnum tipo1 = pilhaTipos.pop();
 		TipoEnum tipo2 = pilhaTipos.pop();
+		
+		if((tipo1 == TipoEnum.float64 || tipo1 == TipoEnum.int64) && (tipo2 == TipoEnum.float64 || tipo2 == TipoEnum.int64)) {
+			throw new SemanticError("tipo(s) incompatível(is) em expressão aritmética: ", token.getPosition());
+		}		
+		
 		if (tipo1 == TipoEnum.float64 || tipo2 == TipoEnum.float64) {
 			pilhaTipos.push(TipoEnum.float64);
 		} else {
 			pilhaTipos.push(TipoEnum.int64);
 		}
-		codigo.add("add");
+		codigo.add("add ");
 	}
 	
-	private void acao2() {
+	private void acao2(Token token) throws SemanticError {
 		TipoEnum tipo1 = pilhaTipos.pop();
 		TipoEnum tipo2 = pilhaTipos.pop();
+		
+		if((tipo1 == TipoEnum.float64 || tipo1 == TipoEnum.int64) && (tipo2 == TipoEnum.float64 || tipo2 == TipoEnum.int64)) {
+			throw new SemanticError("tipo(s) incompatível(is) em expressão aritmética: ", token.getPosition());
+		}
+		
 		if (tipo1 == TipoEnum.float64 || tipo2 == TipoEnum.float64) {
 			pilhaTipos.push(TipoEnum.float64);
 		} else {
 			pilhaTipos.push(TipoEnum.int64);
 		}
-		codigo.add("sub");
+		codigo.add("sub ");
 	}
 	
-	private void acao3(Token token) {
+	private void acao3(Token token) throws SemanticError {
 		TipoEnum tipo1 = pilhaTipos.pop();
 		TipoEnum tipo2 = pilhaTipos.pop();
+		
+		if((tipo1 == TipoEnum.float64 || tipo1 == TipoEnum.int64) && (tipo2 == TipoEnum.float64 || tipo2 == TipoEnum.int64)) {
+			throw new SemanticError("tipo(s) incompatível(is) em expressão aritmética: ", token.getPosition());
+		}
+		
 		if (tipo1 == TipoEnum.float64 || tipo2 == TipoEnum.float64) {
 			pilhaTipos.push(TipoEnum.float64);
 		} else {
 			pilhaTipos.push(TipoEnum.int64);
 		}
-		codigo.add("mul");
+		codigo.add("mul ");
 	}
 	
 	private void acao4(Token token) throws SemanticError {
@@ -123,20 +141,20 @@ public class Semantico implements Constants {
 		if (tipo1 == tipo2) {
 			pilhaTipos.push(tipo1);
 		} else {
-			throw new SemanticError("Erro ao fazer divisão",token.getPosition());
+			throw new SemanticError("tipo(s) incompatível(is) em expressão aritmética: ",token.getPosition());
 		}
-		codigo.add("div");
+		codigo.add("div ");
 	}
 
 	private void acao5(Token token) {
 		pilhaTipos.push(TipoEnum.int64);
-		codigo.add("ldc.i8" + token.getLexeme());
-		codigo.add("conv.r8");
+		codigo.add("ldc.i8 " + token.getLexeme());
+		codigo.add("conv.r8 ");
 	}
 	
 	private void acao6(Token token) {
 		pilhaTipos.push(TipoEnum.float64);
-		codigo.add("ldc.r8" + token.getLexeme());
+		codigo.add("ldc.r8 " + token.getLexeme());
 	}
 	
 	private void acao7(Token token) throws SemanticError {
@@ -144,7 +162,7 @@ public class Semantico implements Constants {
 		if (tipo == TipoEnum.float64 || tipo == TipoEnum.int64) {
 			pilhaTipos.push(tipo);
 		} else {
-			throw new SemanticError("",token.getPosition());
+			throw new SemanticError("tipo(s) incompatível(is) em expressão aritmética: ",token.getPosition());
 		}
 	}
 	
@@ -153,25 +171,25 @@ public class Semantico implements Constants {
 		if (tipo == TipoEnum.float64 || tipo == TipoEnum.int64) {
 			pilhaTipos.push(tipo);
 		} else {
-			throw new SemanticError("",token.getPosition());
+			throw new SemanticError("tipo(s) incompatível(is) em expressão aritmética: ",token.getPosition());
 		}
-		codigo.add("ldc.i8 -1");
-		codigo.add("conv.r8");
-		codigo.add("mul");
+		codigo.add("ldc.i8 -1 ");
+		codigo.add("conv.r8 " );
+		codigo.add("mul ");
 	}
 	
 	private void acao9(Token token) {
-		operadores.add(token.getLexeme());
+		listaIdentificadores.add(token.getLexeme());
 	}
 	
 	private void acao11() {
 		pilhaTipos.push(TipoEnum.bool);
-		codigo.add("ldc.i4.1");
+		codigo.add("ldc.i4.1 ");
 	}
 
 	private void acao12() {
 		pilhaTipos.push(TipoEnum.bool);
-		codigo.add("ldc.i4.0");
+		codigo.add("ldc.i4.0 ");
 	}
 	
 	private void acao13(Token token) throws SemanticError {
@@ -179,18 +197,18 @@ public class Semantico implements Constants {
 		if(tipo == TipoEnum.bool) {
 			pilhaTipos.push(TipoEnum.bool);
 		} else {
-			throw new SemanticError("", token.getPosition());
+			throw new SemanticError("tipo(s) incompatível(is) em expressão lógica: ", token.getPosition());
 		}
-		codigo.add("ldc.i4.1");
-		codigo.add("xor");
+		codigo.add("ldc.i4.1 ");
+		codigo.add("xor ");
 	}
 	
 	private void acao14() {
 		TipoEnum tipo = pilhaTipos.pop();
 		if(tipo == TipoEnum.int64) {
-			codigo.add("conv.i8");
+			codigo.add("conv.i8 ");
 		}
-		codigo.add("call void [mscorlib]System.Console::Write("+ tipo +")");
+		codigo.add("call void [mscorlib]System.Console::Write("+ tipo +") ");
 	}
 	
 	private void acao15() {
@@ -200,7 +218,7 @@ public class Semantico implements Constants {
 				+ "\r\n"
 				+ ".class public _UNICA{\r\n"
 				+ ".method static public void _principal() {\r\n"
-				+ "	.entrypoint");
+				+ "	.entrypoint ");
 	}
 
 	private void acao16() {
@@ -226,5 +244,30 @@ public class Semantico implements Constants {
 		pilhaTipos.push(TipoEnum.string);
 		codigo.add("ldstr \"\\t\"");
 	}
+	
+	private void acao21(Token token) throws SemanticError {
+		TipoEnum tipo1 = pilhaTipos.pop();
+		TipoEnum tipo2 = pilhaTipos.pop();
+		
+		if (tipo1 == TipoEnum.bool || tipo2 == TipoEnum.bool) {
+			pilhaTipos.push(TipoEnum.bool);
+			codigo.add("and ");
+		} else {
+			throw new SemanticError("tipo(s) incompatível(is) em expressão lógica: ", token.getPosition());
+		}
+	}
+	
+	private void acao22(Token token) throws SemanticError {
+		TipoEnum tipo1 = pilhaTipos.pop();
+		TipoEnum tipo2 = pilhaTipos.pop();
+		
+		if (tipo1 == TipoEnum.bool && tipo2 == TipoEnum.bool) {
+			pilhaTipos.push(TipoEnum.bool);
+			codigo.add("or ");
+		} else {
+			throw new SemanticError("tipo(s) incompatível(is) em expressão lógica: ", token.getPosition());
+		}
+	}
+	
 	
 }
