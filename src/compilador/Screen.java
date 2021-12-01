@@ -459,6 +459,7 @@ public class Screen extends javax.swing.JFrame {
 			validaPalavrasReservadas(linhas);
 			sintatico.parse(lexico, semantico);
 			mensagem = "programa compilado com sucesso";
+			saveCodigoObjeto();
 		} catch (SyntaticError e) { // Trata erros sintáticos
 			mensagem = "Erro na linha " + getLinha(linhas, e.getErro(), e.getPosition()) + " - encontrado "
 					+ e.getErro() + " " + e.getMessage();
@@ -557,6 +558,28 @@ public class Screen extends javax.swing.JFrame {
 //
 //		return lexemeClass;
 //	}
+	
+	private void saveCodigoObjeto() {
+		
+		String codigoObjeto = Semantico.getCodigoObjeto().toString().replace(',', '\n');
+		codigoObjeto = codigoObjeto.substring(1, codigoObjeto.length() - 1);
+		System.out.println(codigoObjeto);
+
+		String content = codigoObjeto;
+		String path = file.getPath() + ".il";
+
+		try {
+			FileWriter fw = new FileWriter(path);
+			fw.write(content);
+			fw.flush();
+			fw.close();
+
+		} catch (Exception e2) {
+			System.out.println(e2);
+		}
+
+		lblPath.setText(path);
+	}
 
 	public static void main(String args[]) {
 		/* Create and display the form */
