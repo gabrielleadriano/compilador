@@ -86,6 +86,12 @@ public class Semantico implements Constants {
 		case 24:
 			acao24(token);
 			break;
+		case 25:
+			acao25();
+			break;
+		case 27:
+			acao27();
+			break;
 		case 34:
 			acao34(token);
 			break;
@@ -97,6 +103,10 @@ public class Semantico implements Constants {
 		System.out.println(codigo.toString());
 	}
 
+	public static List<String> getCodigoObjeto() {
+		return codigo;
+	}
+	
 	private void acao1(Token token) throws SemanticError {
 		TipoEnum tipo1 = pilhaTipos.pop();
 		TipoEnum tipo2 = pilhaTipos.pop();
@@ -297,12 +307,36 @@ public class Semantico implements Constants {
 		listaIdentificadores.clear();
 	}
 	
-	private void acao24(Token token) throws SemanticError {
+	private void acao24(Token token) {
 		listaIdentificadores.add(token.getLexeme());
 	}
 	
-	public static List<String> getCodigoObjeto() {
-		return codigo;
+	private void acao25() {
+		String identificador = listaIdentificadores.get(listaIdentificadores.size() - 1);
+		listaIdentificadores.remove(identificador);
+		
+		if(identificador.startsWith("I")) {
+			codigo.add("	conv.i8");
+		}
+		codigo.add("	stloc " + identificador);
+	}
+	
+	private void acao27() {
+		for(String id : listaIdentificadores) {
+			codigo.add("	call string [mscorlib]System.Console::ReadLine()");
+			
+			if(id.startsWith("I")) {
+				codigo.add("	call int64 [mscorlib]System.Int64::Parse(string)");
+			}
+			if(id.startsWith("F")) {
+				codigo.add("	call float64 [mscorlib]System.Double::Parse(string)");
+			}
+			if(id.startsWith("B")) {
+				codigo.add("	call bool [mscorlib]System.Boolean::Parse(string)");
+			}
+			codigo.add("	stloc " + id);
+		}
+		listaIdentificadores.clear();
 	}
 
 	private void acao34(Token token) {
