@@ -1,0 +1,242 @@
+#Options
+GenerateScanner = true
+GenerateParser = true
+Language = Java
+ScannerName = Lexico
+ParserName = Sintatico
+SemanticName = Semantico
+ScannerCaseSensitive = true
+ScannerTable = Compact
+Input = Stream
+Parser = LL
+#RegularDefinitions
+//definições regulares auxiliares
+
+min: [a-z]
+mai: [A-Z]
+num: [0-9]
+
+
+comentario_linha: ! [^\n]*
+comentario_bloco: \{  [^\{\}]* \}
+
+#Tokens
+//EQUIPE: Bianca Krug de Jesus, Gabrielle Alice Adriano
+
+
+palavra_reservada: ({min}+ {mai})* {min}+ 
+
+
+int: I_ ( {min}|{mai} )  ( (({min}|{mai})+ | ({num})+) | (_ (({min}|{mai})+ | ({num})+) ) )*
+float: F_ ( {min}|{mai} )  ( (({min}|{mai})+ | ({num})+) | (_ (({min}|{mai})+ | ({num})+) ) )*
+string: S_ ( {min}|{mai} )  ( (({min}|{mai})+ | ({num})+) | (_ (({min}|{mai})+ | ({num})+) ) )*
+bool: B_ ( {min}|{mai} )  ( (({min}|{mai})+ | ({num})+) | (_ (({min}|{mai})+ | ({num})+) ) )*
+
+constInt: {num}+
+constFloat: {num}+\.{num}+
+constString: \" [^ \"\n"\\"]*  \"
+
+
+
+
+//palavras reservadas
+and = palavra_reservada: "and"
+endIf = palavra_reservada: "endIf"
+endWhile = palavra_reservada: "endWhile"
+false = palavra_reservada: "false"
+finish = palavra_reservada: "finish"
+if = palavra_reservada: "if"
+in = palavra_reservada: "in"
+isFalseDo = palavra_reservada: "isFalseDo"
+isTrueDo = palavra_reservada: "isTrueDo"
+newLine = palavra_reservada: "newLine"
+not = palavra_reservada: "not"
+or = palavra_reservada: "or"
+out = palavra_reservada: "out"
+space = palavra_reservada: "space"
+start = palavra_reservada: "start"
+tab = palavra_reservada: "tab"
+true = palavra_reservada: "true"
+while = palavra_reservada: "while"
+array = palavra_reservada: "array"
+
+
+//símbolos especiais
+"["
+"]"
+"("
+")"
+"=="
+"<>"
+"<"
+">"
+"+"
+"-"
+"*"
+"/"
+","
+";"
+":"
+"="
+
+// reconhecer e ignorar os caracteres de formatação
+:[\s\t\n]
+
+//reconhecer e ignorar comentários
+:! {comentario_linha}
+:! {comentario_bloco}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#NonTerminals
+<programa>
+
+<declaracao_variaveis>
+<lista_identificadores>
+<item_identificador>
+<identificador>
+<tipo>
+<lista_comandos>
+<item_comando>
+<comando>
+<atribuicao>
+<expressao>
+<expressao_>
+<expressao_opcional>
+<sufixo>
+<entrada_dados>
+<constante_string>
+<lista_variaveis>
+<item_variavel>
+<variavel>
+<variavel_tipo>
+<saida_dados>
+<lista_expressoes>
+<item_expressoes>
+<selecao>
+<selecao_opcional>
+<repeticao>
+<repeticao_while>
+<elemento>
+<relacional>
+<relacional_>
+<operador_relacional>
+<aritmetica>
+<aritmetica_>
+<termo>
+<termo_>
+<fator>
+<fator_>
+<identificador_fator>
+#Grammar
+<programa>::= #15 start <declaracao_variaveis> <lista_comandos> finish #16 ;
+
+ 
+<declaracao_variaveis> ::= ":" <lista_identificadores> #23 ";" | î ;
+
+<lista_identificadores> ::= <identificador> #24 <item_identificador>;
+<item_identificador> ::= î |  "," <lista_identificadores>;
+
+<identificador> ::= <tipo> | array <tipo> "[" constInt "]"; 
+
+<tipo> ::= int | float | string | bool ;
+ 
+<lista_comandos> ::= <comando> <item_comando>;
+<item_comando> ::= î | <lista_comandos>;
+
+<comando> ::= <atribuicao> | <entrada_dados> | <saida_dados> | <selecao> | <repeticao> ;
+
+ 
+ 
+
+<atribuicao> ::= <tipo> #24 <expressao_opcional> "=" <expressao> <sufixo> #25 ;
+
+<expressao_opcional> ::= "[" <expressao> "]" | î ;
+
+<sufixo> ::= ":" if <expressao> | î #26 ;
+
+ 
+ 
+
+<entrada_dados> ::=  in "(" <constante_string> <lista_variaveis> #27 ")"  ;
+
+<constante_string> ::= constString #17 #14 "," | î ;
+
+<lista_variaveis> ::= <variavel> <item_variavel>;
+<item_variavel> ::= î | "," <lista_variaveis>;
+
+
+<variavel> ::= <tipo> #24 <variavel_tipo>;
+<variavel_tipo> ::= î | "[" <expressao> "]" ;
+
+ 
+
+<saida_dados> ::= out "(" <lista_expressoes> ")" ;
+
+<lista_expressoes> ::= <expressao> #14 <item_expressoes>;
+<item_expressoes> ::= î | "," <lista_expressoes> ;
+
+ 
+ 
+
+<selecao> ::= if <expressao> #28 isTrueDo <lista_comandos> <selecao_opcional> endIf #29 ;
+
+<selecao_opcional> ::= isFalseDo #30 <lista_comandos> | î ;
+
+ 
+ 
+
+<repeticao> ::= while #31 <expressao> <repeticao_while>;
+<repeticao_while> ::= isTrueDo #32 <lista_comandos> endWhile #33 | isFalseDo #32 <lista_comandos> endWhile #33;
+
+
+
+<expressao> ::= <elemento> <expressao_> ;
+
+<expressao_> ::= î | and <elemento> #21 <expressao_> | or <elemento> #22 <expressao_> ;
+
+<elemento> ::= <relacional> | true #11 | false #12 | not <elemento> #13 ;
+
+<relacional> ::= <aritmetica> <relacional_> ;
+
+<relacional_> ::= î | <operador_relacional> #9 <aritmetica> #10 ;
+
+<operador_relacional> ::= "==" | "<>" | "<" | ">" ;
+
+<aritmetica> ::= <termo> <aritmetica_> ;
+
+<aritmetica_> ::= î | "+" <termo> #1 <aritmetica_> | "-" <termo> #2 <aritmetica_> ;
+
+<termo> ::= <fator> <termo_> ;
+
+<termo_> ::= î | "*" <fator> #3 <termo_> | "/" <fator> #4 <termo_> ;
+
+<fator> ::= <identificador_fator> #34 <fator_> |
+ constInt #5 |
+ constFloat #6 |
+ constString #17 | 
+ newLine #18 | 
+ space #19 | 
+ tab #20 |
+ "(" <expressao> ")" |
+ "+" <fator> #7 |
+ "-" <fator> #8 ;
+
+<fator_> ::= î | "[" <expressao> "]" ;
+
+<identificador_fator> ::= int | float | string | bool ;
+
