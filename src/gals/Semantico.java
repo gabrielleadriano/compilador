@@ -364,29 +364,25 @@ public class Semantico implements Constants {
 	}
 
 	private void acao29() {
-		codigo.add("	" + pilhaRotulos.pop() + ":");
+		codigo.add("	r" + pilhaRotulos.pop() + ":");
 	}
 
 	private void acao30() {
 		codigo.add("	br r" + rotulo);
-		codigo.add("	" + pilhaRotulos.pop() + ":");
+		codigo.add("	r" + pilhaRotulos.pop() + ":");
 		pilhaRotulos.push(rotulo);
 		rotulo++;		
 	}
+	
+	private void acao31() {
+	}
+	
+	private void acao32() {
+	}
+	
+	private void acao33() {
+	}
 
 	private void acao34(Token token) {
-		String identificador = token.getLexeme();
-		codigo.add("	ldloc " + identificador);
-
-		if (identificador.startsWith("I")) {
-			pilhaTipos.push(TipoEnum.int64);
-			codigo.add("	conv.r8");
-		} else if (identificador.startsWith("F")) {
-			pilhaTipos.push(TipoEnum.float64);
-		} else if (identificador.startsWith("S")) {
-			pilhaTipos.push(TipoEnum.string);
-		} else if (identificador.startsWith("B")) {
-			pilhaTipos.push(TipoEnum.bool);
-		}
 	}
 }
