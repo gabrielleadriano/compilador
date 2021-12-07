@@ -463,6 +463,7 @@ public class Screen extends javax.swing.JFrame {
 		} catch (SyntaticError e) { // Trata erros sintáticos
 			mensagem = "Erro na linha " + getLinha(linhas, e.getErro(), e.getPosition()) + " - encontrado "
 					+ e.getErro() + " " + e.getMessage();
+			System.out.println(mensagem);
 
 		} catch (LexicalError e) { // Trata erros léxicos
 
@@ -470,14 +471,16 @@ public class Screen extends javax.swing.JFrame {
 			if (e.getMessage().equalsIgnoreCase("Comentário de bloco inválido ou não finalizado")
 					|| e.getMessage().equalsIgnoreCase("Constante string inválida ou não finalizada")) {
 				mensagem = "Erro na linha " + getLinha(linhas, erro[0], e.getPosition()) + " - " + e.getMessage();
-				System.out.println("Erro na linha " + getLinha(linhas, erro[0], e.getPosition()) + " - " + e.getMessage());
+				System.out.println(mensagem);
 			} else {
 				mensagem = "Erro na linha " + getLinha(linhas, e.getErro(), e.getPosition()) + " - " + e.getErro() + " " + e.getMessage();
-				System.out.println(
-						"Erro na linha " + getLinha(linhas, e.getErro(), e.getPosition()) + " - " + e.getErro() + " " + e.getMessage());
+				System.out.println(mensagem);
 			}
 
 		} catch (SemanticError e) {// Trata erros semânticos
+			mensagem = "Erro na linha " + getLinha(linhas, e.getErro(), e.getPosition()) + " - encontrado "
+					+ e.getErro() + " " + e.getMessage();
+			System.out.println(mensagem);
 		}
 
 		this.jtMessageArea.setText(mensagem);
@@ -566,7 +569,8 @@ public class Screen extends javax.swing.JFrame {
 		System.out.println(codigoObjeto);
 
 		String content = codigoObjeto;
-		String path = file.getPath() + ".il";
+		String path = file.getPath();
+		path = path.replace(".txt", ".il");
 
 		try {
 			FileWriter fw = new FileWriter(path);
