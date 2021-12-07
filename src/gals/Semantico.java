@@ -360,9 +360,9 @@ public class Semantico implements Constants {
 
 	private void acao30() {
 		codigo.add("	br r" + rotulo);
-		rotulo++;
 		codigo.add("	" + pilhaRotulos.pop() + ":");
 		pilhaRotulos.push(rotulo);
+		rotulo++;		
 	}
 
 	private void acao34(Token token) {
