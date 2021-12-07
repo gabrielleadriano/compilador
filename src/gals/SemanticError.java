@@ -11,4 +11,8 @@ public class SemanticError extends AnalysisError
     {
         super(msg);
     }
+
+	public SemanticError(String msg, String erro, int position) {
+		super(msg, erro, position);
+	}
 }
