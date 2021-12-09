@@ -125,6 +125,10 @@ public class Semantico implements Constants {
 	public static List<String> getCodigoObjeto() {
 		return codigo;
 	}
+	
+	public static void limparCodigoObjeto() {
+		codigo.clear();
+	}
 
 	private void acao1(Token token) throws SemanticError {
 		TipoEnum tipo1 = pilhaTipos.pop();
@@ -387,7 +391,7 @@ public class Semantico implements Constants {
 		codigo.add("	r" + pilhaRotulos.pop() + ":");
 	}
 
-	private void acao30() {
+	private void acao30() {		
 		codigo.add("	br r" + rotulo);
 		codigo.add("	r" + pilhaRotulos.pop() + ":");
 		pilhaRotulos.push(rotulo);
@@ -412,8 +416,10 @@ public class Semantico implements Constants {
 	}
 
 	private void acao33() {
-		codigo.add("	br r" + rotulo);
-		codigo.add("	r" + pilhaRotulos.pop() + ":");
+		int rotuloAtual = pilhaRotulos.pop();
+		
+		codigo.add("	br r" + pilhaRotulos.pop());
+		codigo.add("	r" + rotuloAtual + ":");
 	}
 
 	private void acao34(Token token) {

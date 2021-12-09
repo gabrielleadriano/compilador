@@ -501,29 +501,7 @@ public class Screen extends javax.swing.JFrame {
 		}
 	}
 
-//getLinha() antigo
-//	private int getLinha(String[] linhas, String token) {
-//		for (int x = 0; x < linhas.length; x++) {
-//			if (linhas[x].contains(token)) {
-//				return x + 1;
-//			}
-//		}
-//		return 0;
-//	}
-
-	private int getLinha(String[] linhas, String token, int position) {
-		
-// verifica se texto e linhas tem a mesma quantidade de caracteres
-//		String texto = jtEditor.getText();
-//		String teste = texto.substring(position);
-//		int tamanhoTexto = texto.length();
-//		int tamanhoLinhas = 0;
-//		for (int x = 0; x < linhas.length; x++) {
-//			String linhaAtual = linhas[x] + " ";
-//			for (int y = 0; y < linhaAtual.length(); y++) {
-//				tamanhoLinhas++;
-//			}
-//		}
+	private int getLinha(String[] linhas, String token, int position) {		
 		int positionCount = 0;
 		for (int x = 0; x < linhas.length; x++) {
 			String linhaAtual = linhas[x] + " ";
@@ -541,26 +519,6 @@ public class Screen extends javax.swing.JFrame {
 	private void btnTeamAction() {
 		jtMessageArea.setText(btnAction.getTeam());
 	}
-
-//	private String getLexemeClass(int id) {
-//		String lexemeClass = "";
-//
-//		if (id == 2 || (id >= Constants.t_and && id <= Constants.t_while)) {
-//			lexemeClass = "palavra reservada ";
-//		} else if (id == Constants.t_constInt) {
-//			lexemeClass = "constante int	";
-//		} else if (id == Constants.t_constFloat) {
-//			lexemeClass = "constante float	";
-//		} else if (id == Constants.t_constString) {
-//			lexemeClass = "constante string ";
-//		} else if (id >= Constants.t_int && id <= Constants.t_bool) {
-//			lexemeClass = "identificador	";
-//		} else if (id >= Constants.t_TOKEN_28 && id <= Constants.t_TOKEN_43) {
-//			lexemeClass = "símbolo especial ";
-//		}
-//
-//		return lexemeClass;
-//	}
 	
 	private void saveCodigoObjeto() {
 		
@@ -570,8 +528,12 @@ public class Screen extends javax.swing.JFrame {
 
 		String content = codigoObjeto;
 		String path = file.getPath();
-		path = path.replace(".txt", ".il");
-
+		
+		if(path.contains(".txt")) {
+			path = path.replace(".txt", ".il");			
+		}else {
+			path = path + ".il";
+		}
 		try {
 			FileWriter fw = new FileWriter(path);
 			fw.write(content);
@@ -583,6 +545,7 @@ public class Screen extends javax.swing.JFrame {
 		}
 
 		lblPath.setText(path);
+		Semantico.limparCodigoObjeto();
 	}
 
 	public static void main(String args[]) {
