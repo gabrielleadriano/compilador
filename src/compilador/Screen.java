@@ -544,7 +544,7 @@ public class Screen extends javax.swing.JFrame {
 			System.out.println(e2);
 		}
 
-		lblPath.setText(path);
+		//lblPath.setText(path);
 		Semantico.limparCodigoObjeto();
 	}
 

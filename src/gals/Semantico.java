@@ -46,6 +46,9 @@ public class Semantico implements Constants {
 		case 9:
 			acao9(token);
 			break;
+		case 10:
+			acao10(token);
+			break;
 		case 11:
 			acao11();
 			break;
@@ -125,7 +128,7 @@ public class Semantico implements Constants {
 	public static List<String> getCodigoObjeto() {
 		return codigo;
 	}
-	
+
 	public static void limparCodigoObjeto() {
 		codigo.clear();
 	}
@@ -244,6 +247,38 @@ public class Semantico implements Constants {
 
 	private void acao9(Token token) {
 		listaOperadores.add(token.getLexeme());
+	}
+
+	private void acao10(Token token) throws SemanticError {
+		TipoEnum tipo1 = pilhaTipos.pop();
+		TipoEnum tipo2 = pilhaTipos.pop();
+
+		if (tipo1 == tipo2) {
+			pilhaTipos.push(TipoEnum.bool);
+		} else {
+			throw new SemanticError("tipos incompatíveis em expressão relacional", tipo1.name() + " - " + tipo2.name(),
+					token.getPosition());
+		}
+
+		String operador = listaOperadores.get(listaOperadores.size() - 1);
+		listaOperadores.remove(operador);
+		
+		switch (operador) {
+		case ">":
+			codigo.add("	cgt");
+			break;
+		case "<":
+			codigo.add("	clt");
+			break;
+		case "==":
+			codigo.add("	ceq");
+			break;
+		case "<>":
+			codigo.add("	ceq \r\n  ldc.i4.0 \r\n ceq");
+			break;
+		default:
+			break;
+		}
 	}
 
 	private void acao11() {
@@ -391,7 +426,7 @@ public class Semantico implements Constants {
 		codigo.add("	r" + pilhaRotulos.pop() + ":");
 	}
 
-	private void acao30() {		
+	private void acao30() {
 		codigo.add("	br r" + rotulo);
 		codigo.add("	r" + pilhaRotulos.pop() + ":");
 		pilhaRotulos.push(rotulo);
@@ -417,7 +452,7 @@ public class Semantico implements Constants {
 
 	private void acao33() {
 		int rotuloAtual = pilhaRotulos.pop();
-		
+
 		codigo.add("	br r" + pilhaRotulos.pop());
 		codigo.add("	r" + rotuloAtual + ":");
 	}
