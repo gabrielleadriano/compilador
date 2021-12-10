@@ -478,8 +478,7 @@ public class Screen extends javax.swing.JFrame {
 			}
 
 		} catch (SemanticError e) {// Trata erros semânticos
-			mensagem = "Erro na linha " + getLinha(linhas, e.getErro(), e.getPosition()) + " - encontrado "
-					+ e.getErro() + " " + e.getMessage();
+			mensagem = "Erro na linha " + getLinha(linhas, e.getErro(), e.getPosition()) + " - " + e.getMessage();
 			System.out.println(mensagem);
 		}
 
